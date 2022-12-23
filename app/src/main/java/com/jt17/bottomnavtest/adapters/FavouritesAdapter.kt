@@ -10,9 +10,21 @@ import com.jt17.bottomnavtest.models.MenuModel
 
 class FavouritesAdapter : RecyclerView.Adapter<FavouritesAdapter.ItemHolder>() {
 
-    inner class ItemHolder(val b: AddOrdersItemBinding) : RecyclerView.ViewHolder(b.root)
+    inner class ItemHolder(val b: AddOrdersItemBinding) : RecyclerView.ViewHolder(b.root) {
+        fun bind(result: MenuModel, pos: Int) {
+            b.fvName.text = result.title
+            b.fvPrice.text = result.price
+            b.fvImg.setImageResource(result.img ?: R.drawable.ic_launcher_background)
+
+            b.deleteBtn.setOnClickListener {
+                removeAt(pos)
+            }
+        }
+    }
 
     var baseList: ArrayList<MenuModel> = arrayListOf()
+
+//    private val subAdapter by lazy { FavouritesAdapter() }
 
     fun newList(list: ArrayList<MenuModel>) {
         baseList = list
@@ -21,7 +33,8 @@ class FavouritesAdapter : RecyclerView.Adapter<FavouritesAdapter.ItemHolder>() {
 
     fun removeAt(pos: Int) {
         baseList.removeAt(pos)
-        notifyItemRemoved(pos)
+//        notifyItemRemoved(pos)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(
@@ -39,11 +52,9 @@ class FavouritesAdapter : RecyclerView.Adapter<FavouritesAdapter.ItemHolder>() {
 
     override fun onBindViewHolder(holder: FavouritesAdapter.ItemHolder, position: Int) {
         val itemData = baseList[position]
-        with(itemData) {
-            holder.b.fvName.text = title
-            holder.b.fvPrice.text = price
-            holder.b.fvImg.setImageResource(img?: R.drawable.ic_launcher_background)
-        }
+
+        holder.bind(itemData, position)
+
     }
 
     override fun getItemCount(): Int = baseList.size

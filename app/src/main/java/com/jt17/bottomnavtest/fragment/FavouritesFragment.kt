@@ -10,19 +10,24 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jt17.bottomnavtest.R
+import com.jt17.bottomnavtest.adapters.FavAllAdapter
 import com.jt17.bottomnavtest.adapters.FavouritesAdapter
 import com.jt17.bottomnavtest.adapters.ReccomAdapter
 import com.jt17.bottomnavtest.adapters.SwipeToDelete
 import com.jt17.bottomnavtest.databinding.FragmentFavouritesBinding
 import com.jt17.bottomnavtest.models.BasedReccomModel
+import com.jt17.bottomnavtest.models.FavAllModel
 import com.jt17.bottomnavtest.models.MenuModel
 import com.jt17.bottomnavtest.viewmodels.BaseViewModel
+import kotlinx.android.synthetic.main.fav_fragment_item.view.*
+import kotlinx.android.synthetic.main.reccom_item.view.*
 
 
 class FavouritesFragment : Fragment() {
     private var _binding: FragmentFavouritesBinding? = null
     private val binding get() = _binding!!
 
+    private val falAllAdapter by lazy { FavAllAdapter() }
     private val favoritesAdapter by lazy { FavouritesAdapter() }
     private val reccomAdapter by lazy { ReccomAdapter() }
 
@@ -44,48 +49,50 @@ class FavouritesFragment : Fragment() {
         initRecycler()
         initDemoRecyclerList()
 
-        removeItembySwipe()
 
     }
 
     private fun initDemoRecyclerList() {
         //create demo menu list
         val menuList = arrayListOf<MenuModel>()
-        for (j in 1..4) {
+        for (j in 1..9) {
             menuList.add(MenuModel(R.drawable.ic_account, "name $j\nWWW", "more info $j"))
         }
         baseViewModel.responseList.value = menuList
 
         //create demo recommend list
-        val recommendList = mutableListOf<BasedReccomModel>()
-        for (i in 1..2) {
+        val recommendList = arrayListOf<BasedReccomModel>()
+        for (i in 1..3) {
             recommendList.add(BasedReccomModel("title $i", menuList))
         }
+        val favAllList = arrayListOf<FavAllModel>()
+        favAllList.add(FavAllModel(recommendList, menuList))
         //set adapter list
-        favoritesAdapter.newList(menuList)
-        reccomAdapter.newList(recommendList)
+        falAllAdapter.newList(favAllList)
+
     }
 
     private fun initRecycler() {
-        binding.favoriteListRec.run {
-            layoutManager = LinearLayoutManager(requireActivity())
-            adapter = favoritesAdapter
-        }
-        binding.recommendRec.run {
-            layoutManager = LinearLayoutManager(requireActivity())
-            adapter = reccomAdapter
+
+        binding.allRecyc.run {
+            layoutManager = LinearLayoutManager(requireContext())
+
+            adapter = falAllAdapter
+
         }
 
     }
-    private fun removeItembySwipe() {
-        val swipeHelper = object : SwipeToDelete(requireContext()) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                favoritesAdapter.removeAt(viewHolder.adapterPosition)
-            }
-        }
-        val itemTouchHelper = ItemTouchHelper(swipeHelper)
-        itemTouchHelper.attachToRecyclerView(binding.favoriteListRec)
-    }
+
+//    fun removeItembySwipe() {
+//        val swipeHelper = object : SwipeToDelete(requireContext()) {
+//            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+//                favoritesAdapter.removeAt(viewHolder.adapterPosition)
+//            }
+//        }
+//        val itemTouchHelper = ItemTouchHelper(swipeHelper)
+////        itemTouchHelper.attachToRecyclerView()
+//    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

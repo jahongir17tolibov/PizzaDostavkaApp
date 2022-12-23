@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jt17.bottomnavtest.databinding.ActivityMainBinding
 import com.jt17.bottomnavtest.fragment.FavouritesFragment
+import com.jt17.bottomnavtest.fragment.MapsFragment
 import com.jt17.bottomnavtest.fragment.MenuFragment
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +26,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.favouriites -> {
                     changeFormat(FavouritesFragment())
+                }
+                R.id.discount -> {
+                    changeFormat(MapsFragment())
                 }
             }
             true
