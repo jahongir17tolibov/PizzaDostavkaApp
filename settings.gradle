@@ -16,5 +16,5 @@ dependencyResolutionManagement {
 
 
 }
-rootProject.name = "BottomNavTest"
+rootProject.name = "PizzaDostavkaApp"
 include ':app'
